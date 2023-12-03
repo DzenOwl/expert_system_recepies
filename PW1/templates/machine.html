@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Машина</title>
+    <script src="https://unpkg.com/vue@2"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+</head>
+<body style="width: 95vw;">
+
+<div id="app">
+    {% raw %}
+
+    <div class="container-fluid fs-3">
+        <header class="d-flex justify-content-end py-3">
+            <ul class="nav nav-pills">
+                <li class="nav-item"><a href="/base" class="nav-link" aria-current="page">База знаний</a></li>
+                <li class="nav-item"><a href="/machine" class="nav-link active">Обработка</a></li>
+            </ul>
+        </header>
+    </div>
+
+    <div class="text-secondary fs-1 text-center d-flex align-items-center justify-content-center"
+         style="height: 80vh !important;"
+         v-if="!facts && !rules">
+        База знаний пустая!
+    </div>
+
+    <div v-else class="container-fluid ms-5 me-5">
+        <div class="row">
+            <div class="col">
+                <h2>Знания:</h2>
+                <div class="facts">
+                    <div class="database-facts-table form-check">
+                        <div class="d-flex align-items-center" v-for="(fact, index) in facts">
+                            <input :id="`fact-${index}`"
+                                   class="form-check-input"
+                                   type="checkbox"
+                                   value=""
+                                   @change="toggleAvailableFact"
+                                   style="transform: scale(1.3)"
+                            >
+                            <label class="fs-4 ms-2":for="`fact-${index}`">{{ fact }}</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mx-auto mt-3 fs-4">
+                    <button @click="runMachine">Сгенерировать варианты</button>
+                </div>
+            </div>
+
+            <div class="col">
+                <h2>Состав:</h2>
+                <div class="text-secondary fs-4" v-if="!allFacts || allFacts.length === 0">
+                    Список доступных фактов пуст!
+                </div>
+                <div v-else>
+                    <div class="fs-4" v-for="fact in allFacts" v-if="Boolean(allFacts)">
+                        <div>{{fact}}</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-3">
+                <h2>Возможные варианты:</h2>
+                <div class="text-secondary fs-4" v-if="machineResults === null">
+                    Еще не генерировали варианты!
+                </div>
+                <div v-else>
+                    <div class="fs-4" v-for="fact in machineResults">
+                        <div>{{fact}}</div>
+                    </div>
+                </div>
+
+                <h2 class="mt-5">Процесс принятия решения:</h2>
+                <div class="text-secondary fs-4" v-if="machineResults === null">
+                    Еще не генерировали варианты!
+                </div>
+                <div v-else>
+                    <div class="fs-4" v-for="fact in machineResultsExplained">
+                        <div>{{fact}}</div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+    {% endraw %}
+</div>
+<script src="{{ url_for('static', path='js/app.js') }}"></script>
+<script src="{{ url_for('static', path='js/index.js') }}"></script>
+</body>
+</html>
